@@ -155,8 +155,7 @@ if (isset($_POST['simpan'])) {
                                         VALUES ( 
                                             '" . $_POST['nama'] . "',
                                             '" . $_POST['alamat'] . "',
-                                            '" . $_POST['no_hp'] . "',
-                                            '0'
+                                            '" . $_POST['no_hp'] . "'
                                             )");
     }
 
