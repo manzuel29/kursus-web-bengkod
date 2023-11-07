@@ -1,151 +1,106 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Waktu pembuatan: 24 Okt 2023 pada 18.07
--- Versi server: 10.4.24-MariaDB
--- Versi PHP: 7.4.29
+/*
+SQLyog Community v13.2.0 (64 bit)
+MySQL - 10.4.24-MariaDB : Database - poliklinik
+*********************************************************************
+*/
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+/*!40101 SET NAMES utf8 */;
 
+/*!40101 SET SQL_MODE=''*/;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`poliklinik` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
---
--- Database: `poliklinik`
---
+USE `poliklinik`;
 
--- --------------------------------------------------------
+/*Table structure for table `dokter` */
 
---
--- Struktur dari tabel `dokter`
---
+DROP TABLE IF EXISTS `dokter`;
 
 CREATE TABLE `dokter` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) DEFAULT NULL,
   `alamat` varchar(255) DEFAULT NULL,
-  `no_hp` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `no_hp` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `dokter`
---
+/*Data for the table `dokter` */
 
-INSERT INTO `dokter` (`id`, `nama`, `alamat`, `no_hp`) VALUES
-(1, 'RichardLee, PHD', 'Jakarta Selatan', '081131381372'),
-(2, 'Nardoo', 'smg', '08928923232'),
-(3, 'catur', 'pml', '4545525252');
+insert  into `dokter`(`id`,`nama`,`alamat`,`no_hp`) values 
+(1,'RichardLee, PHD','Jakarta Selatan','081131381372'),
+(2,'Cipto tht','semarang','0816316316387'),
+(3,'johan s b','pemalang','02842948892');
 
--- --------------------------------------------------------
+/*Table structure for table `pasien` */
 
---
--- Struktur dari tabel `pasien`
---
+DROP TABLE IF EXISTS `pasien`;
 
 CREATE TABLE `pasien` (
-  `id` int(10) NOT NULL,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `nama` varchar(100) NOT NULL,
   `alamat` varchar(100) NOT NULL,
-  `no_hp` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `no_hp` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `pasien`
---
+/*Data for the table `pasien` */
 
-INSERT INTO `pasien` (`id`, `nama`, `alamat`, `no_hp`) VALUES
-(1, 'surip', 'pemalang', '081131381371'),
-(4, 'subarjo', 'smg', '747474'),
-(5, 'catur', 'pml', '5353535353');
+insert  into `pasien`(`id`,`nama`,`alamat`,`no_hp`) values 
+(1,'surip','pemalang','081131381371'),
+(3,'subarjo','semarang','0892839213'),
+(4,'catur','pekalongan','08132030202'),
+(6,'subarjo','fwefwfw','9823767236423');
 
--- --------------------------------------------------------
+/*Table structure for table `periksa` */
 
---
--- Struktur dari tabel `periksa`
---
+DROP TABLE IF EXISTS `periksa`;
 
 CREATE TABLE `periksa` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_pasien` int(11) NOT NULL,
   `id_dokter` int(11) NOT NULL,
   `tgl_periksa` datetime NOT NULL,
-  `catatan` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `catatan` text NOT NULL,
+  `obat` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_dokter_2` (`id_dokter`),
+  KEY `id_pasien` (`id_pasien`),
+  CONSTRAINT `periksa_ibfk_1` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id`),
+  CONSTRAINT `periksa_ibfk_2` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`),
+  CONSTRAINT `periksa_ibfk_3` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `periksa`
---
+/*Data for the table `periksa` */
 
-INSERT INTO `periksa` (`id`, `id_pasien`, `id_dokter`, `tgl_periksa`, `catatan`) VALUES
-(1, 1, 1, '2023-10-24 00:00:00', 'Kepala semutan'),
-(2, 5, 2, '2023-10-24 00:00:00', 'Kaki pegal');
+insert  into `periksa`(`id`,`id_pasien`,`id_dokter`,`tgl_periksa`,`catatan`,`obat`) values 
+(1,1,2,'2023-11-08 00:00:00','pusing','bodrex'),
+(30,1,1,'2023-11-07 00:00:00','pegellinu ','pegel linu');
 
---
--- Indexes for dumped tables
---
+/*Table structure for table `users` */
 
---
--- Indeks untuk tabel `dokter`
---
-ALTER TABLE `dokter`
-  ADD PRIMARY KEY (`id`);
+DROP TABLE IF EXISTS `users`;
 
---
--- Indeks untuk tabel `pasien`
---
-ALTER TABLE `pasien`
-  ADD PRIMARY KEY (`id`);
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
---
--- Indeks untuk tabel `periksa`
---
-ALTER TABLE `periksa`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_dokter_2` (`id_dokter`),
-  ADD KEY `id_pasien` (`id_pasien`);
+/*Data for the table `users` */
 
---
--- AUTO_INCREMENT untuk tabel yang dibuang
---
+insert  into `users`(`id`,`username`,`password`,`role`) values 
+(1,'manzu','123','dokter'),
+(2,'ena','123','pasien'),
+(3,'bengkod','123','dokter'),
+(4,'bengkelkoding','123','dokter');
 
---
--- AUTO_INCREMENT untuk tabel `dokter`
---
-ALTER TABLE `dokter`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT untuk tabel `pasien`
---
-ALTER TABLE `pasien`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT untuk tabel `periksa`
---
-ALTER TABLE `periksa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `periksa`
---
-ALTER TABLE `periksa`
-  ADD CONSTRAINT `periksa_ibfk_1` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id`),
-  ADD CONSTRAINT `periksa_ibfk_2` FOREIGN KEY (`id_dokter`) REFERENCES `dokter` (`id`),
-  ADD CONSTRAINT `periksa_ibfk_3` FOREIGN KEY (`id_pasien`) REFERENCES `pasien` (`id`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
