@@ -41,6 +41,16 @@
                 Pasien
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="obat.php?page=obat">
+                Obat
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="detail_periksa.php?page=detail_periksa">
+                Detail Periksa
+              </a>
+            </li>
           </ul>
         </li>
         <li class="nav-item">
@@ -52,8 +62,7 @@
       </ul>
     </div>
   </div>
-</nav>
-    
+</nav>  
 <?php
 include'koneksi.php';
 ?>
@@ -68,7 +77,7 @@ $id_pasien = '';
 $id_dokter = '';
 $tgl_periksa = '';
 $catatan = '';
-$obat = '';
+$biaya_periksa = '';
 $id = '';
    
 if (isset($_GET['id']) && $_GET['aksi'] == 'edit') {
@@ -82,7 +91,7 @@ if (isset($_GET['id']) && $_GET['aksi'] == 'edit') {
       $id_dokter = $data['id_dokter'];
       $tgl_periksa = $data['tgl_periksa'];
       $catatan = $data['catatan'];
-      $obat = $data['obat'];
+      $biaya_periksa = $data['biaya_periksa'];
   }
 
     ?>
@@ -134,22 +143,22 @@ if (isset($_GET['id']) && $_GET['aksi'] == 'edit') {
     </select>
     </div>
     <div class="col mb-2">
-        <label for="inputNo_hp" class="form-label fw-bold">
+        <label for="inputTanggal Periksa" class="form-label fw-bold">
         Tanggal Periksa
         </label>
         <input type="date" class="form-control" name="tgl_periksa" id="inputTgl_periksa" placeholder="Tanggal Periksa" value="<?php echo $tgl_periksa; ?>">
     </div>
     <div class="col mb-2">
-        <label for="inputNo_hp" class="form-label fw-bold">
+        <label for="inputCatatan" class="form-label fw-bold">
         Catatan
         </label>
         <input type="text" class="form-control" name="catatan" id="inputCatatan" placeholder="Catatan" value="<?php echo $catatan; ?>">
     </div>
     <div class="col mb-2">
-        <label for="inputNo_hp" class="form-label fw-bold">
-        Obat
+        <label for="inputBiaya_periksa" class="form-label fw-bold">
+        Biaya Periksa
         </label>
-        <input type="text" class="form-control" name="catatan" id="inputCatatan" placeholder="Catatan" value="<?php echo $obat; ?>">
+        <input type="integer" class="form-control" name="biaya_periksa" id="inputBiaya_periksa" placeholder="Biaya Periksa" value="<?php echo $biaya_periksa; ?>">
     </div>
     <div class="col">
         <button type="submit" class="btn btn-primary rounded-pill px-3" name="simpan">Simpan</button>
@@ -164,7 +173,7 @@ if (isset($_GET['id']) && $_GET['aksi'] == 'edit') {
             <th scope="col">Nama Dokter</th>
             <th scope="col">Tanggal Periksa</th>
             <th scope="col">Catatan</th>
-            <th scope="col">Obat</th>
+            <th scope="col">Biaya Periksa</th>
             <th scope="col">Aksi</th>
         </tr>
     </thead>
@@ -173,7 +182,7 @@ if (isset($_GET['id']) && $_GET['aksi'] == 'edit') {
 </div>
 <form method="post" action="periksa.php">
 <?php
-$result = mysqli_query($mysqli, "SELECT pr.*,d.nama as 'nama_dokter', p.nama as 'nama_pasien' FROM periksa pr LEFT JOIN dokter d ON (pr.id_dokter=d.id) LEFT JOIN pasien p ON (pr.id_pasien=p.id) ORDER BY pr.tgl_periksa DESC");
+$result = mysqli_query($mysqli, "SELECT pr.*,d.nama as 'nama_dokter', p.nama as 'nama_pasien' FROM periksa pr LEFT JOIN dokter d ON (pr.id_dokter=d.id) LEFT JOIN pasien p ON (pr.id_pasien=p.id) ORDER BY id ASC");
 $no = 1;
 while ($data = mysqli_fetch_array($result)) {
 ?>
@@ -183,7 +192,7 @@ while ($data = mysqli_fetch_array($result)) {
                                 <td><?php echo $data['nama_dokter'] ?></td>
                                 <td><?php echo $data['tgl_periksa'] ?></td>
                                 <td><?php echo $data['catatan'] ?></td>
-                                <td><?php echo $data['obat'] ?></td>
+                                <td><?php echo $data['biaya_periksa'] ?></td>
                                 <td>
                                     <div class="action-buttons">
                                         <a class="btn btn-primary rounded-pill px-3" href="periksa.php?page=periksa&aksi=edit&id=<?php echo $data['id'] ?>">Edit</a>
@@ -201,7 +210,7 @@ $id_pasien = '';
 $id_dokter = '';
 $tgl_periksa = '';
 $catatan = '';
-$obat = '';
+$biaya_periksa = '';
 $id = '';
 
 $daftar_dokter = mysqli_query($mysqli, "SELECT id_dokter, nama FROM dokter");
@@ -212,13 +221,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['simpan'])) {
     $id_dokter = $_POST['id_dokter'];
     $tgl_periksa = $_POST['tgl_periksa'];
     $catatan = $_POST['catatan'];
-    $obat = $_POST['obat'];
+    $biaya_periksa = $_POST['biaya_periksa'];
 
     if (!empty($_POST['id'])) {
         $id = $_POST['id'];
-        $query = "UPDATE periksa SET id_pasien = $id_pasien, id_dokter = $id_dokter, tgl_periksa = '$tgl_periksa', catatan = '$catatan', obat = '$obat' WHERE id = $id";
+        $query = "UPDATE periksa SET id_pasien = $id_pasien, id_dokter = $id_dokter, tgl_periksa = '$tgl_periksa', catatan = '$catatan', biaya_periksa = '$biaya_periksa' WHERE id = $id";
     } else {
-        $query = "INSERT INTO periksa (id_pasien, id_dokter, tgl_periksa, catatan, obat) VALUES ($id_pasien, $id_dokter, '$tgl_periksa', '$catatan', '$obat')";
+        $query = "INSERT INTO periksa (id_pasien, id_dokter, tgl_periksa, catatan, biaya_periksa) VALUES ($id_pasien, $id_dokter, '$tgl_periksa', '$catatan', '$biaya_periksa')";
     }
 
     if (mysqli_query($mysqli, $query)) {
@@ -256,7 +265,7 @@ if (isset($_GET['id']) && $_GET['aksi'] == 'edit') {
       $id_dokter = $data['id_dokter'];
       $tgl_periksa = $data['tgl_periksa'];
       $catatan = $data['catatan'];
-      $obat = $data['obat'];
+      $biaya_periksa = $data['biaya_periksa'];
   }
 }
 
@@ -265,7 +274,7 @@ $query = "SELECT periksa.id,
                periksa.id_dokter, 
                periksa.tgl_periksa, 
                periksa.catatan, 
-               periksa.obat, 
+               periksa.biaya_periksa, 
                pasien.nama AS nama_pasien, 
                dokter.nama AS nama_dokter
         FROM periksa
